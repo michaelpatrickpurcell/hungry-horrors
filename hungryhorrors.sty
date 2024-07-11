@@ -1,0 +1,63 @@
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+\usepackage{calc}
+
+\newlength{\cardwidth}
+\newlength{\cardheight}
+\newlength{\bleed}
+\newlength{\horizspace}
+\newlength{\vertspace}
+\newlength{\vertdist}
+\newlength{\horizdist}
+
+\setlength{\cardwidth}{1.75in}
+\setlength{\cardheight}{3.5in}
+\setlength{\bleed}{0.0625in}
+\setlength{\horizspace}{0.0625in}
+\setlength{\horizdist}{\cardwidth + 2\bleed + \horizspace}
+\setlength{\vertspace}{0.0625in}
+\setlength{\vertdist}{\cardheight + 2\bleed + \vertspace}
+
+\tikzset{guidecross/.pic={
+	\draw[#1] (-\bleed,0) -- (\bleed,0);
+	\draw[#1] (0, -\bleed) -- (0, \bleed);
+}}
+
+\tikzset{cutguide/.pic={
+	\pic () at (-\cardwidth/2, \cardheight/2) {guidecross={#1}};
+	\pic () at (\cardwidth/2, \cardheight/2) {guidecross={#1}};
+	\pic () at (-\cardwidth/2, -\cardheight/2) {guidecross={#1}};
+	\pic () at (\cardwidth/2, -\cardheight/2) {guidecross={#1}};
+}}
+
+\tikzset{pics/dominocard/.style n args={3}{
+code={
+	\pic at (0in, -0.875in) {face1={#1}};
+	\pic at (0in, 0.875in) {face2={#2}};
+	% Cutting guides for corners of the cards	
+	\pic () at (0,0) {cutguide={#3}};
+}}}
+
+\tikzset{face1/.pic={
+\begin{scope}
+\clip (-0.875in - \bleed, -0.875in - \bleed) rectangle (0.875in + \bleed, 0.875in);
+\node[inner sep=0pt, rotate=90] at (0in,0in) {\includegraphics[height=1.75in + 2\bleed]{Images/#1}}; 
+\end{scope}
+}}
+
+\tikzset{face2/.pic={
+\begin{scope}
+\clip (-0.875in - \bleed, -0.875in) rectangle (0.875in + \bleed, 0.875in + \bleed);
+\node[inner sep=0pt, rotate=90] at (0in,0in) {\includegraphics[height=1.75in + 2\bleed]{Images/#1}}; 
+\end{scope}
+}}
+
+\tikzset{roof/.pic={
+\node[fill=brown, inner sep=0pt] at (0,0) {\includegraphics[width=5in]{Images/rooftop_tiles.png}};
+\node[draw, ultra thick, minimum width=1.75in, minimum height=1.75in] at (-0.875in,-0.875in) {};
+\node[draw, ultra thick, minimum width=1.75in, minimum height=1.75in] at (0.875in,-0.875in) {};
+\node[draw, ultra thick, minimum width=1.75in, minimum height=1.75in] at (0.875in,0.875in) {};
+\node[draw, ultra thick, minimum width=1.75in, minimum height=1.75in] at (-0.875in,0.875in) {};
+}}
